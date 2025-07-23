@@ -13,7 +13,7 @@ import os
 GEMINI_API_KEY = os.getenv("AIzaSyCKEUlTtETH10agbV34-Xpxaf7zlBcQHJg")
 ELEVENLABS_API_KEY = os.getenv("sk_a5ac972b122a92e70df049a3c839ec1aee1f53e6eb24b3ae")
 VOICE_ID = "zT03pEAEi0VHKciJODfn"
-BASE_URL = "https://simplai-ai-calling.onrender.com"
+BASE_URL = "https://simplai-ai-calling-1.onrender.com"
 AUDIO_DIR = os.path.join(os.getcwd(), "audio_files")
 os.makedirs(AUDIO_DIR, exist_ok=True)
 genai.configure(api_key=GEMINI_API_KEY)
