@@ -9,9 +9,11 @@ import os
 app = Flask(__name__)
 
 # ========== CONFIG ==========
-GEMINI_API_KEY = "AIzaSyCKEUlTtETH10agbV34-Xpxaf7zlBcQHJg"
-ELEVENLABS_API_KEY = "sk_a5ac972b122a92e70df049a3c839ec1aee1f53e6eb24b3ae"
+import os
+GEMINI_API_KEY = os.getenv("AIzaSyCKEUlTtETH10agbV34-Xpxaf7zlBcQHJg")
+ELEVENLABS_API_KEY = os.getenv("sk_a5ac972b122a92e70df049a3c839ec1aee1f53e6eb24b3ae")
 VOICE_ID = "zT03pEAEi0VHKciJODfn"
+BASE_URL = "https://simplai-ai-calling.onrender.com"
 AUDIO_DIR = os.path.join(os.getcwd(), "audio_files")
 os.makedirs(AUDIO_DIR, exist_ok=True)
 genai.configure(api_key=GEMINI_API_KEY)
@@ -60,7 +62,7 @@ def voice():
     gather = Gather(input="speech", action="/response", method="POST", language="en-IN", speech_timeout="auto")
 
     if path and os.path.exists(path):
-        url = f"https://8e50877f6c26.ngrok-free.app/audio/{filename}"
+        url = f"{BASE_URL}/audio/{filename}"
         print("[✓] Returning welcome audio:", url)
         gather.play(url)
     else:
@@ -87,7 +89,7 @@ def handle_response():
         filename = f"goodbye_{uuid.uuid4().hex}.mp3"
         path = synthesize_11labs_audio(goodbye_text, filename)
         if path:
-            response.play(f"https://8e50877f6c26.ngrok-free.app/audio/{filename}")
+            response.play(f"{BASE_URL}/audio/{filename}")
         else:
             response.say(goodbye_text, voice="Polly.Aditi", language="en-IN")
         response.hangup()
@@ -113,7 +115,7 @@ Reply briefly in friendly Indian English, max 2 sentences."""
     path = synthesize_11labs_audio(ai_reply, filename)
 
     if path:
-        response.play(f"https://8e50877f6c26.ngrok-free.app/audio/{filename}")
+        response.play(f"{BASE_URL}/audio/{filename}")
     else:
         response.say(ai_reply, voice="Polly.Aditi", language="en-IN")
 
@@ -131,4 +133,4 @@ def serve_audio(filename):
     return "Audio not found", 404
 
 if __name__ == "__main__":
-    app.run(port=5001)
+    app.run(host="0.0.0.0", port=10000)
